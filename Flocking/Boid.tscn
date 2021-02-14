@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/Boid.cs" type="Script" id=1]
+[ext_resource path="res://Models/Arwing.obj" type="ArrayMesh" id=2]
+[ext_resource path="res://Materials/blue.tres" type="Material" id=3]
+
+[sub_resource type="SphereShape" id=1]
+
+[node name="Boid" type="KinematicBody"]
+script = ExtResource( 1 )
+speed = 25.0
+smoothing = 0.2
+wallDetectDistance = 5.0
+
+[node name="Collision" type="CollisionShape" parent="."]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Box" type="CSGBox" parent="Collision"]
+visible = false
+
+[node name="CSGMesh" type="CSGMesh" parent="Collision"]
+mesh = ExtResource( 2 )
+material = ExtResource( 3 )
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, 0, 0 )
