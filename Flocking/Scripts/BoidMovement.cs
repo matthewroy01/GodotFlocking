@@ -18,6 +18,8 @@ namespace Flocking
 		private Vector3 currentForward;
 		private Vector3 currentPosition;
 
+		private float togetherCount;
+
 		public void Initialize(FlockManager fm)
 		{
 			refFlockManager = fm;
@@ -25,6 +27,9 @@ namespace Flocking
 
 		public Vector3 GetFlockDirection(Vector3 forward, Vector3 position, Vector3 reflection)
 		{
+			// reset our counter
+			togetherCount = 0;
+
 			// save the current forward direction for use in calculation
 			currentForward = forward;
 			currentPosition = position;
@@ -33,11 +38,16 @@ namespace Flocking
 
 			// get all of our weighted flock directions
 			Vector3 wander = GetWander();
-            Vector3 cohestion = GetCohesion(boids);
+            Vector3 cohesion = GetCohesion(boids);
             Vector3 alignment = GetAlignment(boids);
             Vector3 separation = GetSeparation(boids);
 
-			return wander + cohestion + alignment + separation + (reflection * WEIGHT_REFLECTION);
+			wander *= WEIGHT_WANDER;
+			cohesion *= WEIGHT_COHESION;
+			alignment *= WEIGHT_ALIGNMENT;
+			separation *= WEIGHT_SEPARATION;
+
+			return wander + cohesion + alignment + separation + (reflection * WEIGHT_REFLECTION);
 		}
 
 		private Vector3 GetWander()
@@ -61,10 +71,10 @@ namespace Flocking
             for (int i = 0; i < boids.Count; ++i)
             {
                 float distance = currentPosition.DistanceTo(boids[i].Translation);
-                if (distance < refFlockManager.distanceCohesion)
+                if (distance < refFlockManager.distanceSeparation)
                 {
                     // add the direction away from the other boid, multiplied by a scalar that increases the closer the boid is
-                    result += (currentPosition - boids[i].Translation) * (refFlockManager.distanceSeparation - distance);
+                    result += (currentPosition - boids[i].Translation) * ((refFlockManager.distanceSeparation * 0.8f) - distance);
                 }
             }
 
@@ -74,7 +84,7 @@ namespace Flocking
                 result /= boids.Count;
             }
 
-            return result * WEIGHT_SEPARATION;
+            return result;
 		}
 
 		private Vector3 GetAlignment(List<Boid> boids)
@@ -89,7 +99,9 @@ namespace Flocking
 				{
 					// add direction the other boid is moving in, multiplied by a scalar that increases the closer the boid is
 					result += boids[i].GlobalTransform.basis.z * (refFlockManager.distanceAlignment - distance);
-				}
+
+                    IncrementTogetherCount(i);
+                }
 			}
 
 			// calculate an average
@@ -98,7 +110,7 @@ namespace Flocking
                 result /= boids.Count;
             }
 
-            return result * WEIGHT_ALIGNMENT;
+            return result;
 		}
 
 		private Vector3 GetCohesion(List<Boid> boids)
@@ -113,6 +125,8 @@ namespace Flocking
 				{
 					// add the direction to the other boid
 					result += boids[i].Translation - currentPosition;
+
+                    IncrementTogetherCount(i);
 				}
 			}
 
@@ -122,7 +136,24 @@ namespace Flocking
 				result /= boids.Count;
 			}
 
-            return result * WEIGHT_COHESION;
+            return result;
+		}
+
+		private void IncrementTogetherCount(int i)
+		{
+            if (togetherCount <= i)
+            {
+                togetherCount++;
+            }
+		}
+
+		private bool GetTogetherCount()
+		{
+			if (togetherCount > 15)
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

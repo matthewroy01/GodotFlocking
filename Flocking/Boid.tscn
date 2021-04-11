@@ -10,7 +10,7 @@
 script = ExtResource( 1 )
 speed = 25.0
 smoothing = 0.2
-wallDetectDistance = 5.0
+wallDetectDistance = 8.0
 
 [node name="Collision" type="CollisionShape" parent="."]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )

@@ -28,6 +28,7 @@ public class FlockManager : Node
     public override void _Process(float delta)
     {
         AddBoid();
+        RemoveBoid();
     }
 
     private void SpawnInitialBoids()
@@ -73,6 +74,18 @@ public class FlockManager : Node
     private void RemoveBoid()
     {
         // input here to remove a boid from the scene
+        if (Input.IsActionJustPressed("ui_back"))
+        {
+            if (boids.Count > 0)
+            {
+                // remove the latest boid from the list
+                var tmp = boids[boids.Count - 1];
+                boids.Remove(tmp);
+
+                // destroy the latest boid
+                tmp.QueueFree();
+            }
+        }
     }
 
     public List<Boid> GetBoids()
