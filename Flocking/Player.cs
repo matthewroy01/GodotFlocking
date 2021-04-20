@@ -48,6 +48,12 @@ public class Player : KinematicBody
 
     public override void _PhysicsProcess(float delta)
     {
+        Movement(delta);
+        Jumping();
+    }
+
+    private void Movement(float delta)
+    {
         // reset the X and Z velocities
         velocity.x = 0.0f;
         velocity.z = 0.0f;
@@ -87,7 +93,10 @@ public class Player : KinematicBody
 
         // move the player
         velocity = MoveAndSlide(velocity, Vector3.Up);
+    }
 
+    private void Jumping()
+    {
         // jumping
         if (Input.IsActionJustPressed("jump") && IsOnFloor())
         {
@@ -96,6 +105,11 @@ public class Player : KinematicBody
     }
 
     public override void _Process(float delta)
+    {
+        CameraMovement(delta);
+    }
+
+    private void CameraMovement(float delta)
     {
         // rotate the camera along the x axis and clamp it
         float xAngle = Mathf.Clamp(camera.RotationDegrees.x - (mouseDelta.y * LOOK_SENSITIVTY * delta), LOOK_ANGLE_MIN, LOOK_ANGLE_MAX);
