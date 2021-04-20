@@ -57,7 +57,7 @@ public class FlockManager : Node
     private void AddBoid()
     {
         // input here to add a new boid to the scene
-        if (Input.IsActionJustPressed("ui_accept"))
+        if (Input.IsActionJustPressed("boid_add"))
         {
             Spatial tmp = (Spatial)boidScene.Instance() as Spatial;
             tmp.Translation = new Vector3(0, 0, 0);
@@ -74,7 +74,7 @@ public class FlockManager : Node
     private void RemoveBoid()
     {
         // input here to remove a boid from the scene
-        if (Input.IsActionJustPressed("ui_back"))
+        if (Input.IsActionJustPressed("boid_remove"))
         {
             if (boids.Count > 0)
             {
