@@ -32,10 +32,20 @@ public class Player : KinematicBody
     private Camera camera;
     private Spatial muzzle;
 
+    // shooting
+    private BulletPooler bulletPooler;
+    [Export]
+    public PackedScene bulletScene;
+    [Export]
+    public float bulletSpeed;
+
     public override void _Ready()
     {
         // hide and lock the mouse cursor
         Input.SetMouseMode(Input.MouseMode.Captured);
+
+        bulletPooler = new BulletPooler();
+        bulletPooler.Initialize(bulletScene, 20, GetParent());
 
         GetComponents();
     }
@@ -107,6 +117,7 @@ public class Player : KinematicBody
     public override void _Process(float delta)
     {
         CameraMovement(delta);
+        Fire();
     }
 
     private void CameraMovement(float delta)
@@ -121,6 +132,20 @@ public class Player : KinematicBody
 
         // reset mouse delta vector
         mouseDelta = Vector2.Zero;
+    }
+
+    private void Fire()
+    {
+        if (Input.IsActionJustPressed("shoot"))
+        {
+            Projectile tmp = bulletPooler.GetBullet();
+
+            if (tmp != null)
+            {
+                tmp.GlobalTransform = muzzle.GlobalTransform;
+                tmp.Fire(camera.GlobalTransform.basis.z * -1, bulletSpeed);
+            }
+        }
     }
 
     public override void _Input(InputEvent inputEvent)

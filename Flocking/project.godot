@@ -67,6 +67,11 @@ boid_remove={
  ]
 }
 
+[layer_names]
+
+3d_physics/layer_2="Environment"
+3d_physics/layer_3="Boid"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

@@ -1,15 +1,22 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Models/Arwing.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://Materials/gray.tres" type="Material" id=2]
-[ext_resource path="res://Player.cs" type="Script" id=3]
+[ext_resource path="res://Scripts/Player.cs" type="Script" id=3]
+[ext_resource path="res://Prefab Nodes/Projectile.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.5
 height = 1.5
 
 [node name="Player" type="KinematicBody"]
+collision_mask = 2
 script = ExtResource( 3 )
+movementSpeed = 20.0
+jumpForce = 50.0
+gravity = 100.0
+bulletScene = ExtResource( 4 )
+bulletSpeed = 100.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )

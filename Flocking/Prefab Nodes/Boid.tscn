@@ -7,6 +7,7 @@
 [sub_resource type="SphereShape" id=1]
 
 [node name="Boid" type="KinematicBody"]
+collision_layer = 4
 script = ExtResource( 1 )
 speed = 25.0
 smoothing = 0.2

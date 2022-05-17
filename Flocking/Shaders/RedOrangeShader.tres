@@ -1,0 +1,78 @@
+[gd_resource type="VisualShader" load_steps=7 format=2]
+
+[sub_resource type="VisualShaderNodeColorConstant" id=1]
+constant = Color( 1, 0, 0, 1 )
+
+[sub_resource type="VisualShaderNodeColorConstant" id=2]
+constant = Color( 1, 0.470588, 0, 1 )
+
+[sub_resource type="VisualShaderNodeVectorInterp" id=3]
+
+[sub_resource type="VisualShaderNodeScalarFunc" id=4]
+function = 0
+
+[sub_resource type="VisualShaderNodeInput" id=5]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeScalarOp" id=6]
+default_input_values = [ 0, 0.0, 1, 20.0 ]
+operator = 2
+
+[resource]
+code = "shader_type spatial;
+render_mode specular_schlick_ggx;
+
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// Color:2
+	vec3 n_out2p0 = vec3(1.000000, 0.000000, 0.000000);
+	float n_out2p1 = 1.000000;
+
+// Color:3
+	vec3 n_out3p0 = vec3(1.000000, 0.470588, 0.000000);
+	float n_out3p1 = 1.000000;
+
+// Input:6
+	float n_out6p0 = TIME;
+
+// ScalarOp:7
+	float n_in7p1 = 20.00000;
+	float n_out7p0 = n_out6p0 * n_in7p1;
+
+// ScalarFunc:5
+	float n_out5p0 = sin(n_out7p0);
+
+// VectorMix:4
+	vec3 n_out4p0 = mix(n_out2p0, n_out3p0, vec3(n_out5p0));
+
+// Output:0
+	ALBEDO = n_out4p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( -754, -154 )
+nodes/fragment/2/node = SubResource( 1 )
+nodes/fragment/2/position = Vector2( -140, 140 )
+nodes/fragment/3/node = SubResource( 2 )
+nodes/fragment/3/position = Vector2( -140, 220 )
+nodes/fragment/4/node = SubResource( 3 )
+nodes/fragment/4/position = Vector2( 120, 240 )
+nodes/fragment/5/node = SubResource( 4 )
+nodes/fragment/5/position = Vector2( -160, 340 )
+nodes/fragment/6/node = SubResource( 5 )
+nodes/fragment/6/position = Vector2( -600, 340 )
+nodes/fragment/7/node = SubResource( 6 )
+nodes/fragment/7/position = Vector2( -380, 320 )
+nodes/fragment/connections = PoolIntArray( 2, 0, 4, 0, 3, 0, 4, 1, 4, 0, 0, 0, 5, 0, 4, 2, 6, 0, 7, 0, 7, 0, 5, 0 )
